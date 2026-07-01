@@ -1,16 +1,23 @@
-export class RjpHubClient {
-  constructor(baseUrl){ this.baseUrl = baseUrl || localStorage.getItem('rjp_hub_url') || ''; }
-  setUrl(url){ this.baseUrl = url; localStorage.setItem('rjp_hub_url', url); }
-  async post(action, payload={}){
-    if(!this.baseUrl) throw new Error('URL do RJP Hub não configurado');
-    const res = await fetch(this.baseUrl, { method:'POST', body: JSON.stringify({ action, ...payload }) });
-    return await res.json();
+const URL_KEY = 'rjp_hub_backend_url';
+
+export function getHubUrl(){ return localStorage.getItem(URL_KEY) || ''; }
+export function setHubUrl(url){ localStorage.setItem(URL_KEY, String(url || '').trim()); }
+
+export async function hub(action, payload = {}){
+  const url = getHubUrl();
+  if(!url) return { ok:false, error:'URL do RJP Hub em falta.' };
+  try{
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, ...payload })
+    });
+    const text = await res.text();
+    try { return JSON.parse(text); } catch { return { ok:false, error:text || 'Resposta inválida' }; }
+  }catch(err){
+    return { ok:false, error: err.message || 'Falha de ligação ao RJP Hub' };
   }
-  ping(){ return this.post('ping'); }
-  syncAll(payload){ return this.post('syncAll', payload); }
-  listCalendar(){ return this.post('calendar.list'); }
-  addCalendar(event){ return this.post('calendar.add', { event }); }
-  importStudy(){ return this.post('study.import'); }
-  importSwim(){ return this.post('swim.import'); }
 }
-export const hub = new RjpHubClient();
+
+export async function ping(){ return hub('ping'); }
+export async function syncAll(payload){ return hub('syncAll', payload); }

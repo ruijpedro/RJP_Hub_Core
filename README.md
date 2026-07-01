@@ -1,62 +1,35 @@
-# RJP Hub Core V2
+# RJP Hub Core V3
 
-Base reutilizável para WebApp e APK Android, preparada para ligar Família Rolim Pedro, RJP Study, SwimTrack e futuras apps ao mesmo backend Google.
+Motor comum para o ecossistema RJP: Família Rolim Pedro, RJP Study, SwimTrack e futuras apps.
 
-## O que inclui
+## O que esta versão inclui
 
-- React + Vite
-- Capacitor Android
-- Workflow `build-android.yml` para gerar APK
-- Workflow `build-webapp.yml` para gerar WebApp e GitHub Pages
-- Ícone Android reforçado
-- `capacitor.config.json` pronto
-- Backend Google Apps Script em `google-apps-script/`
-- Cliente comum em `src/api/hubClient.js`
+- WebApp React/Vite pronta para GitHub Pages.
+- APK via Capacitor/GitHub Actions.
+- Backend Apps Script V3 único.
+- Calendar Engine.
+- Drive Engine.
+- Sheets Engine.
+- Conectores Study e SwimTrack.
+- Cache offline básica.
+- Notificações locais preparadas.
+- IA Core local inicial.
 
-## Como publicar no GitHub
+## Como usar
 
-1. Cria um repositório chamado `RJP_Hub_Core`.
-2. Envia todos os ficheiros/pastas soltos deste ZIP para a raiz do repositório.
-3. Confirma que ficam na raiz:
-   - `src`
-   - `public`
-   - `package.json`
-   - `vite.config.js`
-   - `capacitor.config.json`
-   - `.github/workflows`
+1. Faz upload dos ficheiros soltos para o GitHub.
+2. Corre `Build WebApp` para publicar a WebApp.
+3. Corre `Build Android APK` para gerar APK.
+4. No Apps Script, cola `google-apps-script/Code.gs`.
+5. Publica como Aplicação Web.
+6. Cola o URL `/exec` na app.
 
-## Criar WebApp
+## Próximas ligações
 
-Vai a **Actions → Build WebApp → Run workflow**.
+- Adicionar `STUDY_SHEET_ID` ou endpoint exportFamily da RJP Study.
+- Adicionar `SWIM_SHEET_ID` ou endpoint exportFamily do SwimTrack.
+- Ligar Família Rolim Pedro ao mesmo Hub.
 
-O resultado fica em **Artifacts** como `RJP_Hub_Core_webapp_dist` e, se o GitHub Pages estiver ativo, é publicado automaticamente.
+## Repositório recomendado
 
-## Criar APK
-
-Vai a **Actions → Build Android APK → Run workflow**.
-
-O resultado fica em **Artifacts** como `RJP_Hub_Core_debug_apk`.
-
-## Apps Script
-
-1. Abre `google-apps-script/`.
-2. Copia os ficheiros `.gs` para um projeto Google Apps Script.
-3. No `Code.gs`, confirma o `FAMILY_CALENDAR_ID`.
-4. Publica como App Web:
-   - Executar como: **Eu**
-   - Quem tem acesso: **Qualquer pessoa**
-5. Cola o URL `/exec` na app RJP Hub Core.
-
-## Ações principais
-
-- `ping`
-- `syncAll`
-- `calendar.list`
-- `calendar.add`
-- `study.import`
-- `swim.import`
-- `backup.create`
-
-## Nota
-
-Este projeto é o motor comum. Não substitui a app Família; serve para ser reutilizado depois dentro da Família, Study, SwimTrack e restantes projetos.
+Nome sugerido: `RJP_Hub_Core`.

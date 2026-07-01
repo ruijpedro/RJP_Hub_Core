@@ -3,7 +3,5 @@
   "appName": "RJP Hub Core",
   "webDir": "dist",
   "bundledWebRuntime": false,
-  "server": {
-    "androidScheme": "https"
-  }
+  "server": { "androidScheme": "https" }
 }
