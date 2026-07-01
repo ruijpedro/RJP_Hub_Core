@@ -13,7 +13,7 @@ permissions:
 jobs:
   build-web:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,11 +28,8 @@ jobs:
         run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
       - name: Build WebApp
         run: npx vite build
-      - name: Upload WebApp Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: RJP_Hub_Core_webapp_dist
-          path: dist
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -12,56 +12,46 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     timeout-minutes: 35
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
       - name: Reset npm
         run: |
           npm install -g npm@10.9.2
           npm cache clean --force
           rm -rf node_modules package-lock.json
-
       - name: Install dependencies
         run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
-
       - name: Build WebApp
         run: npx vite build
-
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
       - name: Add Android platform if missing
         run: |
           if [ ! -d android ]; then
             npx cap add android
           fi
-          npx cap sync android
-
-      - name: Force app icon and manifest
+      - name: Sync Capacitor
+        run: npx cap sync android
+      - name: Apply Android template icons and manifest
         run: |
-          mkdir -p android/app/src/main/res
-          cp -R android-template/app/src/main/res/* android/app/src/main/res/
-          cp android-template/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          grep -R "RJP Hub Core" android/app/src/main/AndroidManifest.xml
-
-      - name: Build APK
-        run: |
-          cd android
-          chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
-
+          if [ -d android-template/app/src/main/res ]; then
+            cp -R android-template/app/src/main/res/* android/app/src/main/res/
+          fi
+          if [ -f android-template/AndroidManifest.xml ]; then
+            cp android-template/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+          fi
+      - name: Make Gradle executable
+        run: chmod +x android/gradlew
+      - name: Build debug APK
+        run: cd android && ./gradlew assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: RJP_Hub_Core_debug_apk
+          name: RJP-Hub-Core-V3-APK
           path: android/app/build/outputs/apk/debug/*.apk
