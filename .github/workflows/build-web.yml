@@ -1,1 +1,13 @@
-
+name: Build Web
+on: [workflow_dispatch, push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with: { name: RJP_Hub_Core_dist, path: dist }
