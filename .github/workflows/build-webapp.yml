@@ -1,0 +1,41 @@
+name: Build WebApp
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Reset npm
+        run: |
+          npm install -g npm@10.9.2
+          npm cache clean --force
+          rm -rf node_modules package-lock.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
+      - name: Build WebApp
+        run: npx vite build
+      - name: Upload WebApp Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RJP_Hub_Core_webapp_dist
+          path: dist
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

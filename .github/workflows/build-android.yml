@@ -1,0 +1,67 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Reset npm
+        run: |
+          npm install -g npm@10.9.2
+          npm cache clean --force
+          rm -rf node_modules package-lock.json
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
+
+      - name: Build WebApp
+        run: npx vite build
+
+      - name: Add Android platform if missing
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Force app icon and manifest
+        run: |
+          mkdir -p android/app/src/main/res
+          cp -R android-template/app/src/main/res/* android/app/src/main/res/
+          cp android-template/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+          grep -R "RJP Hub Core" android/app/src/main/AndroidManifest.xml
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RJP_Hub_Core_debug_apk
+          path: android/app/build/outputs/apk/debug/*.apk
