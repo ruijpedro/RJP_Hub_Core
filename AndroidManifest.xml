@@ -1,0 +1,7 @@
+// Família Rolim Pedro - Configuração Google
+// V3.2: URL do Apps Script já configurado.
+// Também podes alterar dentro da app em Sync, sem recompilar.
+export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyO4AttHRBZ1O9X7ZFr-ZxNjwfCMCjgt96fTclcof-vpYECVZEwRafHCqG7r95D27No/exec'
+
+export const FAMILY_MEMBERS = ['Rui', 'Gina', 'Constança', 'Lourenço']
+export const FAMILY_CALENDAR_NAME = 'Família Rolim Pedro'
