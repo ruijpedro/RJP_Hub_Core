@@ -1,13 +1,32 @@
-name: Build Web
-on: [workflow_dispatch, push]
+name: Build WebApp
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  build:
+  build-web:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
-      - run: npm run build
-      - uses: actions/upload-artifact@v4
-        with: { name: RJP_Hub_Core_dist, path: dist }
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install --no-audit --no-fund --legacy-peer-deps --no-package-lock
+      - name: Build WebApp
+        run: npx vite build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - uses: actions/deploy-pages@v4
