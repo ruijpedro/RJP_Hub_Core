@@ -53,7 +53,7 @@ export default function App(){
     <header className="hero">
       <div>
         <p className="eyebrow">RJP OS</p>
-        <h1>RJP Hub Core V4</h1>
+        <h1>RJP Hub Core V4.2</h1>
         <p>Motor comum para Família, Study, SwimTrack e futuras apps.</p>
       </div>
       <div className="badge"><Cloud size={18}/> Hub Core</div>
@@ -71,7 +71,7 @@ export default function App(){
 
     <section className="grid stats">
       <div className="card"><strong>{events.length}</strong><span>eventos em cache</span></div>
-      <div className="card"><strong>V4</strong><span>backend central</span></div>
+      <div className="card"><strong>V4.2</strong><span>backend central</span></div>
       <div className="card"><strong>3</strong><span>apps preparadas</span></div>
     </section>
 
